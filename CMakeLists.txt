@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.10)
 project(KeyValueStore)
 
+# Enable CMake's testing functionality
+enable_testing()
+
 # Specify the C++ standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
@@ -30,3 +33,41 @@ target_link_libraries(KeyValueStore ${SQLITE3_LIBRARY})
 #  target_include_directories(KeyValueStore PUBLIC ${SQLITE3_INCLUDE_DIRS})
 #  target_link_libraries(KeyValueStore ${SQLITE3_LIBRARIES})
 #endif()
+
+
+# For testing
+# Include FetchContent module to fetch dependencies
+include(FetchContent)
+
+# Fetch Google Test
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/release-1.11.0.zip
+)
+FetchContent_MakeAvailable(googletest)
+
+# Now declare your test executable
+add_executable(KVStoreTest tests/test_kv_store.cpp)
+
+# Link Google Test and your project library
+target_link_libraries(KVStoreTest gtest_main KeyValueStoreLib ${SQLITE3_LIBRARY})
+
+# Include Google Test's includes
+target_include_directories(KVStoreTest PUBLIC
+    "${PROJECT_BINARY_DIR}"
+    "${PROJECT_SOURCE_DIR}/include"
+)
+
+# Add tests to CMake's test system
+include(GoogleTest)
+gtest_discover_tests(KVStoreTest)
+
+# Create a library for the KeyValueStore code
+add_library(KeyValueStoreLib STATIC src/KeyValueStore.cpp)
+target_include_directories(KeyValueStoreLib PUBLIC "${PROJECT_SOURCE_DIR}/include")
+
+# Link library to the main application
+target_link_libraries(KeyValueStore KeyValueStoreLib)
+
+# Link library to the test executable
+target_link_libraries(KVStoreTest gtest_main KeyValueStoreLib)

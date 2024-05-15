@@ -1,17 +1,19 @@
+#include <memory>
 #include "gtest/gtest.h"
 #include "KeyValueStore.h"
 
 class KVStoreTest : public ::testing::Test {
 protected:
-    KeyValueStore* store;
+    // Create a shared pointer to the KeyValueStore object to not copy the object
+    std::shared_ptr<KeyValueStore> store;
 
     void SetUp() override {
-        store = new KeyValueStore("test.db");
+        store = std::make_shared<KeyValueStore>("test.db");
         store->put("testkey", "testvalue");
     }
 
     void TearDown() override {
-        delete store;
+        store.reset();
     }
 };
 
@@ -27,6 +29,14 @@ TEST_F(KVStoreTest, UpdatesValueCorrectly) {
 TEST_F(KVStoreTest, RemovesKey) {
     store->remove("testkey");
     ASSERT_TRUE(store->get("testkey").empty());
+}
+
+// Test speed of storing and saving values that are 100kB in size
+TEST_F(KVStoreTest, PerformanceTest) {
+    std::string key = "largekey";
+    std::string value(100000, 'a');
+    store->put(key, value);
+    ASSERT_EQ(value, store->get(key));
 }
 
 int main(int argc, char **argv) {
