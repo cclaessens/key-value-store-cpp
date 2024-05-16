@@ -11,7 +11,7 @@ Rebuild SQLite3 for arm64.
 
 ## Test script
 
-The test script tests basic functionality, the speed at which 5 threads do 100 read and write operations, and tests for write skew effects.
+The test_kv_store.cpp script tests basic functionality, the speed at which 5 threads do 100 read and write operations, and checks for write skew effects.
 <br>Output on Apple M1 Pro Chip (10 cores) with SSD:
 
 ```
