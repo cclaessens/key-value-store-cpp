@@ -6,7 +6,8 @@ C++ implementation of key-value-store using sqlite3 and mutex locks for thread l
 ## To get it working on on a Mac with M chip:
 
 Rebuild SQLite3 for arm64.
-Copy libsqlite3.a to lib and sqlite3.h to include. Link against them in CMakeLists.txt.
+<br>Copy libsqlite3.a to *lib* and sqlite3.h to *include*. 
+<br>Link against them in *CMakeLists.txt*.
 
 ## Test script
 
