@@ -50,7 +50,7 @@ TEST_F(KVStoreTest, MultiThreadedPerformanceTest) {
     std::vector<std::thread> threads;
     for (int i = 0; i < 5; i++) {
         threads.push_back(std::thread([this, &key, &value]() {
-            // Each thread stores and retrieves the value 5 times
+            // Each thread stores and retrieves the value 100 times
             for (int j = 0; j < 100; j++) {
                 store->put(key, value);
                 store->get(key);
@@ -87,7 +87,7 @@ TEST_F(KVStoreTest, WriteSkew) {
             std::string value = store->get(key);
 
             // If the value is the initial value, update it
-            // If multiple threads read the intial value, they will all multiple x's to the value
+            // If multiple threads read the intial value, they will add multiple x's to the value
             if (value == "initial_value") {
                 store->put(key, value + "x");
             }

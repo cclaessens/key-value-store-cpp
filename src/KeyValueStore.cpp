@@ -91,6 +91,10 @@ void KeyValueStore::put(const std::string& key, const std::string& value) {
         sqlite3_bind_text(put_stmt, 1, key.c_str(), -1, SQLITE_STATIC);
         sqlite3_bind_text(put_stmt, 2, value.c_str(), -1, SQLITE_STATIC);
         if (sqlite3_step(put_stmt) != SQLITE_DONE) {
+            // check why SQLITE_DONE is not True
+            if (SQLITE_BUSY) {
+                throw std::runtime_error("Failed to execute statement. The database file is locked: " + std::string(sqlite3_errmsg(db)));
+            }
             throw std::runtime_error("Failed to execute statement");
         }
         // reset statement so it can be used again
