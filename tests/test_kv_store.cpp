@@ -20,7 +20,7 @@ protected:
     }
 };
 
-// Test setting a value
+// Test getting a value
 TEST_F(KVStoreTest, RetrievesStoredValue) {
     ASSERT_EQ("testvalue", store->get("testkey"));
 }
@@ -37,7 +37,7 @@ TEST_F(KVStoreTest, RemovesKey) {
     ASSERT_TRUE(store->get("testkey").empty());
 }
 
-// Test speed of storing and saving values that are 100kB in size
+// Test speed of storing and saving values that are >100kB in size
 TEST_F(KVStoreTest, MultiThreadedPerformanceTest) {
     std::string key = "largekey";
     std::string value(200000, 'a');
